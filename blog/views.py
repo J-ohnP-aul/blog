@@ -33,10 +33,6 @@ def post_list(request):
 
 
 def post_detail(request, year, month, day, post):
-  # try:
-  #   post = Post.published.get(id=id)
-  # except Post.DoesNotExist:
-  #   raise Http404("No Post Foundn !!")
   post = get_object_or_404(
     Post,
     # id=id,
@@ -48,7 +44,7 @@ def post_detail(request, year, month, day, post):
   )
   comments = post.comments.filter(active=True)
   form = CommentForm() #form 4 user 2 comment
-  return render(request, 'blog/post/detail.html', {'post':post})
+  return render(request, 'blog/post/detail.html', {'post':post, 'comments':comments, 'form':form})
 
 def post_share(request, post_id):
   post = get_object_or_404(
