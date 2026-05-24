@@ -5,6 +5,7 @@ from django.views.generic import ListView #cbv
 from django.views.decorators.http import require_POST
 from .forms import EmailPostForm, CommentForm
 from django.core.mail import send_mail
+from taggit.models import Tag
 
 from .models import Post
 
@@ -12,7 +13,10 @@ from .models import Post
 
 def post_list(request):
   post_list = Post.published.all()
-  
+  tag = None
+  if tag_slug:
+    tag = get_object_or_404(Tag, slug=tag_slug)
+    post_list = post_list.filter(tags__in=[tag])
   paginator = Paginator(post_list, 3) #3 post per page
   page_number = request.GET.get('page', 1)
   try:
@@ -22,7 +26,7 @@ def post_list(request):
   except EmptyPage:
     posts = paginator.page(paginator.num_pages)
 
-  return render(request, 'blog/post/list.html', {'posts':posts})
+  return render(request, 'blog/post/list.html', {'posts':posts, 'tag':tag})
 
 # class PostListView(ListView):
 #   queryset = Post.published.all()
