@@ -11,7 +11,7 @@ from .models import Post
 
 # Create your views here.
 
-def post_list(request):
+def post_list(request, tag_slug=None):
   post_list = Post.published.all()
   tag = None
   if tag_slug:
